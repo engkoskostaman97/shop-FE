@@ -1,24 +1,20 @@
-import React, { useState, useEffect, createElement } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { useParams, useHistory } from "react-router";
+import { useParams, useNavigate } from "react-router";
+import { useQuery, useMutation } from "react-query";
 
 import NavbarAdmin from "../components/NavbarAdmin";
 import CheckBox from "../components/form/CheckBox";
 
 import dataProduct from "../fakeData/product";
 
-// Import useQuery and useMutation
-import { useQuery, useMutation } from "react-query";
-
-// Get API config
 import { API } from "../config/api";
 
 export default function UpdateProductAdmin() {
   const title = "Product admin";
-  document.title = "SHOP | " + title;
+  document.title = "DumbMerch | " + title;
 
-  let history = useHistory();
-  let api = API();
+  let navigate = useNavigate();
   const { id } = useParams();
 
   const [categories, setCategories] = useState([]); //Store all category data
@@ -34,35 +30,44 @@ export default function UpdateProductAdmin() {
   }); //Store product data
 
   // Fetching detail product data by id from database
-  let { productRefetch } = useQuery("productCache", async () => {
-    const config = {
-      headers: {
-        Authorization: "Basic " + localStorage.token,
-      },
-    };
-    const response = await API.get("/product/" + id, config);
-    setForm({
-      name: response.data.name,
-      desc: response.data.desc,
-      price: response.data.price,
-      qty: response.data.qty,
-      image: response.data.image,
-    });
-    setProduct(response.data);
+  let { data: products, refetch } = useQuery("productCache", async () => {
+    const response = await API.get("/product/" + id);
+    return response.data.data;
   });
 
   // Fetching category data
-  let { categoriesRefetch } = useQuery("categoriesCache", async () => {
-    const response = await api.get("/categories");
-    setCategories(response.data);
-  });
+  let { data: categoriesData, refetch: refetchCategories } = useQuery(
+    "categoriesCache",
+    async () => {
+      const response = await API.get("/categories");
+      return response.data.data;
+    }
+  );
+
+  useEffect(() => {
+    if (products) {
+      setPreview(products.image);
+      setForm({
+        ...form,
+        name: products.name,
+        desc: products.desc,
+        price: products.price,
+        qty: products.qty,
+      });
+      setProduct(products);
+    }
+
+    if (categoriesData) {
+      setCategories(categoriesData);
+    }
+  }, [products]);
 
   // For handle if category selected
   const handleChangeCategoryId = (e) => {
     const id = e.target.value;
     const checked = e.target.checked;
 
-    if (checked == true) {
+    if (checked) {
       // Save category id if checked
       setCategoryId([...categoryId, parseInt(id)]);
     } else {
@@ -84,7 +89,8 @@ export default function UpdateProductAdmin() {
 
     // Create image url for preview
     if (e.target.type === "file") {
-      setPreview(e.target.files);
+      let url = URL.createObjectURL(e.target.files[0]);
+      setPreview(url);
     }
   };
 
@@ -92,30 +98,37 @@ export default function UpdateProductAdmin() {
     try {
       e.preventDefault();
 
+      // Configuration
+      const config = {
+        headers: {
+          "Content-type": "multipart/form-data",
+        },
+      };
+
       // Store data with FormData as object
       const formData = new FormData();
-      if (preview) {
-        formData.set("image", preview[0], preview[0]?.name);
+      if (form.image) {
+        formData.set("image", form?.image[0], form?.image[0]?.name);
       }
       formData.set("name", form.name);
       formData.set("desc", form.desc);
       formData.set("price", form.price);
       formData.set("qty", form.qty);
       formData.set("categoryId", categoryId);
-
-      // Configuration
-      const config = {
-        method: "PATCH",
-        headers: {
-          Authorization: "Basic " + localStorage.token,
-        },
-        body: formData,
-      };
-
+      console.log(categoryId);
       // Insert product data
-      const response = await API.patch("/product/" + product.id, config);
+      const response = await API.patch(
+        "/product/" + product.id,
+        formData,
+        config
+      );
 
-      history.push("/product-admin");
+      console.clear();
+      console.log(products);
+
+      if (response.data.code == 200) {
+        navigate("/product-admin");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -139,26 +152,16 @@ export default function UpdateProductAdmin() {
           </Col>
           <Col xs="12">
             <form onSubmit={(e) => handleSubmit.mutate(e)}>
-              {!preview ? (
+              {preview && (
                 <div>
                   <img
-                    src={form.image}
+                    src={preview}
                     style={{
                       maxWidth: "150px",
                       maxHeight: "150px",
                       objectFit: "cover",
                     }}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <img
-                    src={URL.createObjectURL(preview[0])}
-                    style={{
-                      maxWidth: "150px",
-                      maxHeight: "150px",
-                      objectFit: "cover",
-                    }}
+                    alt="preview"
                   />
                 </div>
               )}
@@ -177,14 +180,14 @@ export default function UpdateProductAdmin() {
                 placeholder="Product Name"
                 name="name"
                 onChange={handleChange}
-                value={form.name}
+                value={form?.name}
                 className="input-edit-category mt-4"
               />
               <textarea
                 placeholder="Product Desc"
                 name="desc"
                 onChange={handleChange}
-                value={form.desc}
+                value={form?.desc}
                 className="input-edit-category mt-4"
                 style={{ height: "130px" }}
               ></textarea>
@@ -193,7 +196,7 @@ export default function UpdateProductAdmin() {
                 placeholder="Price (Rp.)"
                 name="price"
                 onChange={handleChange}
-                value={form.price}
+                value={form?.price}
                 className="input-edit-category mt-4"
               />
               <input
@@ -201,7 +204,7 @@ export default function UpdateProductAdmin() {
                 placeholder="Stock"
                 name="qty"
                 onChange={handleChange}
-                value={form.qty}
+                value={form?.qty}
                 className="input-edit-category mt-4"
               />
 
@@ -213,14 +216,14 @@ export default function UpdateProductAdmin() {
                   Category
                 </div>
                 {product &&
-                  categories.map((item) => (
-                    <label class="checkbox-inline me-4">
+                  categories?.map((item, index) => (
+                    <label key={index} className="checkbox-inline me-4">
                       <CheckBox
                         categoryId={categoryId}
-                        value={item.id}
+                        value={item?.id}
                         handleChangeCategoryId={handleChangeCategoryId}
                       />
-                      <span className="ms-2">{item.name}</span>
+                      <span className="ms-2">{item?.name}</span>
                     </label>
                   ))}
               </div>
