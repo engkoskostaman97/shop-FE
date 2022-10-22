@@ -1,13 +1,13 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../context/userContext";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import { useMutation } from "react-query";
 
 import { API } from "../../config/api";
 
 export default function Login() {
-  let navigate = useNavigate();
+  // let navigate = useNavigate();
 
   const title = "Login";
   document.title = "Nutech | " + title;
