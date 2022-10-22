@@ -12,7 +12,6 @@ export default function Register() {
   document.title = "SHOP | " + title;
 
   let history = useHistory();
-  let api = API();
 
   const [state, dispatch] = useContext(UserContext);
 
@@ -49,7 +48,7 @@ export default function Register() {
       };
 
       // Insert data user to database
-      const response = await api.post("/register", config);
+      const response = await API.post("/register",body ,config);
 
       console.log(response);
 

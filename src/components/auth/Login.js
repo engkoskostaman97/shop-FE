@@ -14,7 +14,7 @@ export default function Login() {
   document.title = "SHOP | " + title;
 
   let history = useHistory();
-  let api = API();
+
 
   const [state, dispatch] = useContext(UserContext);
 
@@ -50,7 +50,7 @@ export default function Login() {
       };
 
       // Insert data for login process
-      const response = await api.post("/login", config);
+      const response = await API.post("/login",body, config);
 
       console.log(response);
 
