@@ -36,7 +36,7 @@ export default function Auth() {
               className="img-fluid"
               style={{ width: "264px", height: "264px" }}
             />
-           
+
             <div className="mt-5">
               <button onClick={switchLogin} className="btn btn-login px-5">
                 Login
