@@ -9,7 +9,7 @@ import { API } from "../../config/api";
 
 export default function Register() {
   const title = "Register";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   let history = useHistory();
   let api = API();

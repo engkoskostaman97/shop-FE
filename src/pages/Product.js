@@ -20,7 +20,7 @@ export default function Product() {
   let api = API();
 
   const title = "Shop";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   // Fetching product data from database
   let { data: products, refetch } = useQuery("productsCache", async () => {

@@ -16,7 +16,7 @@ export default function AddCategoryAdmin() {
   console.clear();
 
   const title = "Category admin";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   let history = useHistory();
   let api = API();

@@ -31,7 +31,7 @@ export default function ProductAdmin() {
   const handleShow = () => setShow(true);
 
   const title = "Product admin";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   // Fetching product data from database
   let { data: products, refetch } = useQuery("productsCache", async () => {

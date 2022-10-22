@@ -15,7 +15,7 @@ import { API } from "../config/api";
 
 export default function UpdateProductAdmin() {
   const title = "Product admin";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   let history = useHistory();
   let api = API();

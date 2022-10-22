@@ -20,7 +20,7 @@ import { API } from "../config/api";
 
 export default function Profile() {
   const title = "Profile";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   let api = API();
 

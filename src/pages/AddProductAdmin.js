@@ -12,7 +12,7 @@ import { API } from "../config/api";
 
 export default function AddProductAdmin() {
   const title = "Product admin";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   let history = useHistory();
   let api = API();

@@ -11,7 +11,7 @@ import { API } from "../../config/api";
 
 export default function Login() {
   const title = "Login";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   let history = useHistory();
   let api = API();

@@ -14,7 +14,7 @@ import { API } from "../config/api";
 
 export default function UpdateCategoryAdmin() {
   const title = "Category admin";
-  document.title = "DumbMerch | " + title;
+  document.title = "SHOP | " + title;
 
   let history = useHistory();
   let api = API();
