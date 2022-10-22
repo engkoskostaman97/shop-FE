@@ -26,7 +26,7 @@ export default function DetailProduct() {
         Authorization: "Basic " + localStorage.token,
       },
     };
-    const response = await api.get("/product/" + id, config);
+    const response = await API.get("/product/" + id, config);
     return response.data;
   });
 
@@ -55,7 +55,7 @@ export default function DetailProduct() {
       };
 
       // Insert transaction data
-      const response = await api.post("/transaction", config);
+      const response = await API.post("/transaction", config);
 
       // Create variabel for store token payment from response here ...
 

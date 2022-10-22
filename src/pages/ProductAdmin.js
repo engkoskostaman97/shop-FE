@@ -41,7 +41,7 @@ export default function ProductAdmin() {
         Authorization: "Basic " + localStorage.token,
       },
     };
-    const response = await api.get("/products", config);
+    const response = await API.get("/products", config);
     return response.data;
   });
 
@@ -68,7 +68,8 @@ export default function ProductAdmin() {
           Authorization: "Basic " + localStorage.token,
         },
       };
-      await api.delete(`/product/${id}`, config);
+      await 
+      API.delete(`/product/${id}`, config);
       refetch();
     } catch (error) {
       console.log(error);

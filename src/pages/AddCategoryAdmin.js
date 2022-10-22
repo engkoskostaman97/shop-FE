@@ -45,7 +45,7 @@ export default function AddCategoryAdmin() {
       console.log(config);
 
       // Insert category data
-      const response = await api.post("/category", config);
+      const response = await API.post("/category", config);
 
       console.log(response);
 

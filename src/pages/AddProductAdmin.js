@@ -30,7 +30,7 @@ export default function AddProductAdmin() {
 
   // Fetching category data
   let { data: categories, refetch } = useQuery("categoriesCache", async () => {
-    const response = await api.get("/categories");
+    const response = await API.get("/categories");
     return response.data;
   });
 
@@ -89,7 +89,7 @@ export default function AddProductAdmin() {
       };
 
       // Insert product data
-      const response = await api.post("/product", config);
+      const response = await API.post("/product", config);
 
       history.push("/product-admin");
     } catch (error) {

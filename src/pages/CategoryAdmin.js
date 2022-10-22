@@ -32,7 +32,7 @@ export default function CategoryAdmin() {
 
   // Fetching categories data from database
   let { data: categories, refetch } = useQuery("categoriesCache", async () => {
-    const response = await api.get("/categories");
+    const response = await API.get("/categories");
     return response.data;
   });
 
@@ -55,7 +55,7 @@ export default function CategoryAdmin() {
           Authorization: "Basic " + localStorage.token,
         },
       };
-      await api.delete(`/category/${id}`, config);
+      await API.delete(`/category/${id}`, config);
       refetch();
     } catch (error) {
       console.log(error);

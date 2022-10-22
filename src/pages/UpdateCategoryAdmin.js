@@ -24,7 +24,7 @@ export default function UpdateCategoryAdmin() {
 
   // Fetching category data by id from database
   let { refetch } = useQuery("categoryCache", async () => {
-    const response = await api.get("/category/" + id);
+    const response = await API.get("/category/" + id);
     setCategory({ name: response.data.name });
   });
 
@@ -52,7 +52,7 @@ export default function UpdateCategoryAdmin() {
       };
 
       // Insert category data
-      const response = await api.patch("/category/" + id, config);
+      const response = await API.patch("/category/" + id, config);
 
       history.push("/category-admin");
     } catch (error) {

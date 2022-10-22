@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../../context/userContext";
-import { useHistory } from "react-router-dom";
 import { Alert } from "react-bootstrap";
-
 import { useMutation } from "react-query";
 
 import { API } from "../../config/api";
@@ -10,8 +8,6 @@ import { API } from "../../config/api";
 export default function Register() {
   const title = "Register";
   document.title = "SHOP | " + title;
-
-  let history = useHistory();
 
   const [state, dispatch] = useContext(UserContext);
 
@@ -35,25 +31,21 @@ export default function Register() {
     try {
       e.preventDefault();
 
+      // Configuration Content-type
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
       // Data body
       const body = JSON.stringify(form);
 
-      // Configuration Content-type
-      const config = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: body,
-      };
-
       // Insert data user to database
-      const response = await API.post("/register",body ,config);
-
-      console.log(response);
+      const response = await API.post("/register", body, config);
 
       // Notification
-      if (response.code == 200) {
+      if (response.data.code === 200) {
         const alert = (
           <Alert variant="success" className="py-1">
             Success
@@ -122,7 +114,7 @@ export default function Register() {
             />
           </div>
           <div className="d-grid gap-2 mt-5">
-            <button type="submit" className="btn btn-register">
+            <button type="submit" className="btn btn-login">
               Register
             </button>
           </div>

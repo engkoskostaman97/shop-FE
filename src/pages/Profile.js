@@ -36,7 +36,7 @@ export default function Profile() {
           Authorization: "Basic " + localStorage.token,
         },
       };
-      const response = await api.get("/profile", config);
+      const response = await API.get("/profile", config);
       return response.data;
     }
   );
@@ -51,7 +51,7 @@ export default function Profile() {
           Authorization: "Basic " + localStorage.token,
         },
       };
-      const response = await api.get("/transactions", config);
+      const response = await API.get("/transactions", config);
       return response.data;
     }
   );

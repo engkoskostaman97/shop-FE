@@ -30,7 +30,7 @@ export default function Product() {
         Authorization: "Basic " + localStorage.token,
       },
     };
-    const response = await api.get("/products", config);
+    const response = await API.get("/products", config);
     return response.data;
   });
 

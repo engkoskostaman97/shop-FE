@@ -40,7 +40,7 @@ export default function UpdateProductAdmin() {
         Authorization: "Basic " + localStorage.token,
       },
     };
-    const response = await api.get("/product/" + id, config);
+    const response = await API.get("/product/" + id, config);
     setForm({
       name: response.data.name,
       desc: response.data.desc,
@@ -113,7 +113,7 @@ export default function UpdateProductAdmin() {
       };
 
       // Insert product data
-      const response = await api.patch("/product/" + product.id, config);
+      const response = await API.patch("/product/" + product.id, config);
 
       history.push("/product-admin");
     } catch (error) {
