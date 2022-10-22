@@ -1,75 +1,51 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Table, Button } from "react-bootstrap";
-import { useHistory } from "react-router";
-import ShowMoreText from "react-show-more-text";
-import rupiahFormat from "rupiah-format";
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Table, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router';
+import ShowMoreText from 'react-show-more-text';
+import rupiahFormat from 'rupiah-format';
+import { useQuery, useMutation } from 'react-query';
 
-import NavbarAdmin from "../components/NavbarAdmin";
-import DeleteData from "../components/modal/DeleteData";
+import NavbarAdmin from '../components/NavbarAdmin';
+import DeleteData from '../components/modal/DeleteData';
 
-import imgEmpty from "../assets/empty.svg";
+import imgEmpty from '../assets/empty.svg';
 
-import dataProduct from "../fakeData/product";
-
-// Import useQuery and useMutation
-import { useQuery, useMutation } from "react-query";
-
-// API config
-import { API } from "../config/api";
+import { API } from '../config/api';
 
 export default function ProductAdmin() {
-  let history = useHistory();
-  let api = API();
+  let navigate = useNavigate();
 
-  // Variabel for delete product data
+  const title = 'Product admin';
+  document.title = 'DumbMerch | ' + title;
+
   const [idDelete, setIdDelete] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  // Modal Confirm delete data
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const title = "Product admin";
-  document.title = "SHOP | " + title;
-
-  // Fetching product data from database
-  let { data: products, refetch } = useQuery("productsCache", async () => {
-    const config = {
-      method: "GET",
-      headers: {
-        Authorization: "Basic " + localStorage.token,
-      },
-    };
-    const response = await API.get("/products", config);
-    return response.data;
+  let { data: products, refetch } = useQuery('productsCache', async () => {
+    const response = await API.get('/products');
+    return response.data.data;
   });
 
   const addProduct = () => {
-    history.push("/add-product");
+    navigate('/add-product');
   };
 
-  const handleEdit = (id) => {
-    history.push("/edit-product/" + id);
+  const handleUpdate = (id) => {
+    navigate('/update-product/' + id);
   };
 
-  // For get id product & show modal confirm delete data
   const handleDelete = (id) => {
     setIdDelete(id);
     handleShow();
   };
 
-  // If confirm is true, execute delete data
   const deleteById = useMutation(async (id) => {
     try {
-      const config = {
-        method: "DELETE",
-        headers: {
-          Authorization: "Basic " + localStorage.token,
-        },
-      };
-      await 
-      API.delete(`/product/${id}`, config);
+      await API.delete(`/product/${id}`);
       refetch();
     } catch (error) {
       console.log(error);
@@ -78,9 +54,7 @@ export default function ProductAdmin() {
 
   useEffect(() => {
     if (confirmDelete) {
-      // Close modal confirm delete data
       handleClose();
-      // execute delete data by id function
       deleteById.mutate(idDelete);
       setConfirmDelete(null);
     }
@@ -99,13 +73,13 @@ export default function ProductAdmin() {
             <Button
               onClick={addProduct}
               className="btn-dark"
-              style={{ width: "100px" }}
+              style={{ width: '100px' }}
             >
               Add
             </Button>
           </Col>
           <Col xs="12">
-            {products?.length != 0 ? (
+            {products?.length !== 0 ? (
               <Table striped hover size="lg" variant="dark">
                 <thead>
                   <tr>
@@ -114,24 +88,25 @@ export default function ProductAdmin() {
                     </th>
                     <th>Photo</th>
                     <th>Product Name</th>
-                    <th>Harga Beli</th>
-                    <th>Harga Jual</th>
+                    <th>Product Desc</th>
+                    <th>Price</th>
                     <th>Qty</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {products?.map((item, index) => (
-                    <tr>
+                    <tr key={index}>
                       <td className="align-middle text-center">{index + 1}</td>
                       <td className="align-middle">
                         <img
                           src={item.image}
                           style={{
-                            width: "80px",
-                            height: "80px",
-                            objectFit: "cover",
+                            width: '80px',
+                            height: '80px',
+                            objectFit: 'cover',
                           }}
+                          alt={item.name}
                         />
                       </td>
                       <td className="align-middle">{item.name}</td>
@@ -146,20 +121,20 @@ export default function ProductAdmin() {
                           expanded={false}
                           width={280}
                         >
-                          {rupiahFormat.convert(item.buy)}
+                          {item.desc}
                         </ShowMoreText>
                       </td>
                       <td className="align-middle">
-                        {rupiahFormat.convert(item.sell)}
+                        {rupiahFormat.convert(item.price)}
                       </td>
                       <td className="align-middle">{item.qty}</td>
                       <td className="align-middle">
                         <Button
                           onClick={() => {
-                            handleEdit(item.id);
+                            handleUpdate(item.id);
                           }}
                           className="btn-sm btn-success me-2"
-                          style={{ width: "135px" }}
+                          style={{ width: '135px' }}
                         >
                           Edit
                         </Button>
@@ -168,7 +143,7 @@ export default function ProductAdmin() {
                             handleDelete(item.id);
                           }}
                           className="btn-sm btn-danger"
-                          style={{ width: "135px" }}
+                          style={{ width: '135px' }}
                         >
                           Delete
                         </Button>
@@ -182,7 +157,8 @@ export default function ProductAdmin() {
                 <img
                   src={imgEmpty}
                   className="img-fluid"
-                  style={{ width: "40%" }}
+                  style={{ width: '40%' }}
+                  alt="empty"
                 />
                 <div className="mt-3">No data product</div>
               </div>
