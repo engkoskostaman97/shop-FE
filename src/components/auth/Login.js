@@ -1,16 +1,20 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../context/userContext";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Alert } from "react-bootstrap";
+
+// Import useMutation
 import { useMutation } from "react-query";
 
+// Import API config
 import { API } from "../../config/api";
 
 export default function Login() {
-  let navigate = useNavigate();
-
   const title = "Login";
   document.title = "SHOP | " + title;
+
+  let history = useHistory();
+  let api = API();
 
   const [state, dispatch] = useContext(UserContext);
 
@@ -33,39 +37,48 @@ export default function Login() {
     try {
       e.preventDefault();
 
-      // Configuration
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-
       // Data body
       const body = JSON.stringify(form);
 
-      // Insert data for login process
-      const response = await API.post("/login", body, config);
+      // Configuration
+      const config = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      };
 
-      // console.log(response);
+      // Insert data for login process
+      const response = await API.post("/login", config);
+
+      console.log(response);
 
       // Checking process
-      if (response?.status === 200) {
+      if (response.code == 200) {
         // Send data to useContext
         dispatch({
           type: "LOGIN_SUCCESS",
-          payload: response.data.data,
+          payload: response.data,
         });
 
         // Status check
-        if (response.data.data.status === "admin") {
-          navigate("/product-admin");
+        if (response.data.status == "admin") {
+          history.push("/complain-admin");
         } else {
-          navigate("/");
+          history.push("/");
         }
 
         const alert = (
           <Alert variant="success" className="py-1">
             Login success
+          </Alert>
+        );
+        setMessage(alert);
+      } else {
+        const alert = (
+          <Alert variant="danger" className="py-1">
+            Login failed
           </Alert>
         );
         setMessage(alert);
