@@ -10,7 +10,7 @@ export default function Login() {
   let navigate = useNavigate();
 
   const title = "Login";
-  document.title = "DumbMerch | " + title;
+  document.title = "Shop | " + title;
 
   const [state, dispatch] = useContext(UserContext);
 

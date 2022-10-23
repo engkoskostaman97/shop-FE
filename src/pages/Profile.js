@@ -54,20 +54,6 @@ export default function Profile() {
                 <div className="profile-header">Email</div>
                 <div className="profile-content">{state.user.email}</div>
 
-                <div className="profile-header">Phone</div>
-                <div className="profile-content">
-                  {profile?.phone ? profile?.phone : "-"}
-                </div>
-
-                <div className="profile-header">Gender</div>
-                <div className="profile-content">
-                  {profile?.gender ? profile?.gender : "-"}
-                </div>
-
-                <div className="profile-header">Address</div>
-                <div className="profile-content">
-                  {profile?.address ? profile?.address : "-"}
-                </div>
               </Col>
             </Row>
           </Col>
