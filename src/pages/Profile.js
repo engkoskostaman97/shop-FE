@@ -2,59 +2,35 @@ import React, { useContext, useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import dateFormat from "dateformat";
 import convertRupiah from "rupiah-format";
+import { useQuery } from "react-query";
 
 import Navbar from "../components/Navbar";
 
 import imgDumbMerch from "../assets/DumbMerch.png";
 
 import { UserContext } from "../context/userContext";
-import dataTransaction from "../fakeData/transaction";
 
 import imgBlank from "../assets/blank-profile.png";
 
-// Import useQuery
-import { useQuery } from "react-query";
-
-// API config
 import { API } from "../config/api";
 
 export default function Profile() {
   const title = "Profile";
-  document.title = "SHOP | " + title;
-
-  let api = API();
+  document.title = "DumbMerch | " + title;
 
   const [state] = useContext(UserContext);
 
-  // Fetching profile data from database
-  let { data: profile, refetch: profileRefetch } = useQuery(
-    "profileCache",
-    async () => {
-      const config = {
-        method: "GET",
-        headers: {
-          Authorization: "Basic " + localStorage.token,
-        },
-      };
-      const response = await API.get("/profile", config);
-      return response.data;
-    }
-  );
+  // const [transactions, setTransactions] = useState([]);
 
-  // Fetching transactions data from database
-  let { data: transactions, refetch: transactionsRefetch } = useQuery(
-    "transactionsCache",
-    async () => {
-      const config = {
-        method: "GET",
-        headers: {
-          Authorization: "Basic " + localStorage.token,
-        },
-      };
-      const response = await API.get("/transactions", config);
-      return response.data;
-    }
-  );
+  let { data: profile } = useQuery("profileCache", async () => {
+    const response = await API.get("/profile");
+    return response.data.data;
+  });
+
+  let { data: transactions } = useQuery("transactionsCache", async () => {
+    const response = await API.get("/transactions");
+    return response.data.data;
+  });
 
   return (
     <>
@@ -68,7 +44,7 @@ export default function Profile() {
                 <img
                   src={profile?.image ? profile.image : imgBlank}
                   className="img-fluid rounded"
-                  alt="profile"
+                  alt="avatar"
                 />
               </Col>
               <Col md="6">
@@ -78,15 +54,33 @@ export default function Profile() {
                 <div className="profile-header">Email</div>
                 <div className="profile-content">{state.user.email}</div>
 
+                <div className="profile-header">Phone</div>
+                <div className="profile-content">
+                  {profile?.phone ? profile?.phone : "-"}
+                </div>
+
+                <div className="profile-header">Gender</div>
+                <div className="profile-content">
+                  {profile?.gender ? profile?.gender : "-"}
+                </div>
+
+                <div className="profile-header">Address</div>
+                <div className="profile-content">
+                  {profile?.address ? profile?.address : "-"}
+                </div>
               </Col>
             </Row>
           </Col>
           <Col md="6">
             <div className="text-header-product mb-4">My Transaction</div>
-            {transactions?.length != 0 ? (
+            {transactions?.length !== 0 ? (
               <>
-                {transactions?.map((item) => (
-                  <div style={{ background: "#303030" }} className="p-2 mb-1">
+                {transactions?.map((item, index) => (
+                  <div
+                    key={index}
+                    style={{ background: "#303030" }}
+                    className="p-2 mb-1"
+                  >
                     <Container fluid className="px-1">
                       <Row>
                         <Col xs="3">
@@ -121,11 +115,7 @@ export default function Profile() {
                               lineHeight: "19px",
                             }}
                           >
-                            {dateFormat(
-                              item.createdAt,
-                              "dddd, d mmmm yyyy, HH:MM "
-                            )}
-                            WIB
+                            {dateFormat(item.createdAt, "dddd, d mmmm yyyy")}
                           </div>
 
                           <div
