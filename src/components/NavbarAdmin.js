@@ -7,7 +7,7 @@ import {
 
 import { UserContext } from '../context/userContext'
 
-import ImgDumbMerch from '../assets/DumbMerch.png'
+import ImgDumbMerch from '../assets/shop.png'
 
 export default function NavbarAdmin(props) {
     const [state, dispatch] = useContext(UserContext)

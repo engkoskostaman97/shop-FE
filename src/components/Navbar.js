@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, { useContext } from 'react'
 import { Container, Navbar as NavbarComp, Nav, NavDropdown } from 'react-bootstrap'
 import {
     Link,
@@ -7,7 +7,7 @@ import {
 
 import { UserContext } from '../context/userContext'
 
-import ImgDumbMerch from '../assets/DumbMerch.png'
+import ImgDumbMerch from '../assets/shop.png'
 
 export default function Navbar(props) {
     const [state, dispatch] = useContext(UserContext)
