@@ -114,7 +114,7 @@ export default function Register() {
             />
           </div>
           <div className="d-grid gap-2 mt-5">
-            <button type="submit" className="btn btn-login">
+            <button type="submit" className="btn btn-register">
               Register
             </button>
           </div>
